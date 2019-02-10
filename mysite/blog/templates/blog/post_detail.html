@@ -11,7 +11,7 @@
         </div>
 
     {% else %}
-        <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}"></a>
+        <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
     {% endif %}
 
     <p class="postcontent"> {{ post.title|safe|linebreaksbr }} </p>
@@ -40,12 +40,12 @@
                                 <span class="glyphicon glyphicon-remove"></span>
                             </a>
                     
-                            <a class="btn btn-primary" href="{% url 'comment_approve' pk=post.pk %}">
+                            <a class="btn btn-primary" href="{% url 'comment_approve' pk=comment.pk %}">
                                     <span class="glyphicon glyphicon-ok"></span>
                             </a>
                         {% endif %}
 
-                            <p>{{comment.text|safe|linbreaks}}</p>
+                            <p>{{comment.text|safe|linebreaks}}</p>
                             <p>Posted By: {{ comment.author }} </p>
                 {% endif %}
                 {% empty %}
