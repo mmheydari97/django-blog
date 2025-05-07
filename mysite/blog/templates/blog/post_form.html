@@ -1,17 +1,105 @@
 {% extends "blog/base.html" %}
 
 {% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h2 class="mb-0"><i class="fas fa-edit"></i> Create New Post</h2>
+    </div>
+    <div class="card-body">
+        <form class="post-form" method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="id_author" class="form-label">Author</label>
+                {{ form.author }}
+            </div>
+            
+            <div class="mb-3">
+                <label for="id_title" class="form-label">Title</label>
+                {{ form.title }}
+            </div>
+            
+            <div class="mb-3">
+                <label for="id_text" class="form-label">Content</label>
+                {{ form.text }}
+                <div class="form-text text-muted mt-1">
+                    <small>Use the editor toolbar to format your content.</small>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between">
+                <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Post
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
-    <h1>New Post</h1>
-    <form class="post-form" method="POST">
+<style>
+    .post-form textarea,
+    .post-form input,
+    .post-form select {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+    
+    .post-form textarea:focus,
+    .post-form input:focus,
+    .post-form select:focus {
+        border-color: var(--primary-color);
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+    }
+    
+    .post-form textarea {
+        min-height: 300px;
+    }
+    
+    /* Medium Editor Customization */
+    .medium-editor-toolbar {
+        border-radius: var(--border-radius);
+        background-color: var(--secondary-color);
+    }
+    
+    .medium-editor-toolbar-active {
+        visibility: visible;
+        animation: fadeInDown 0.2s;
+    }
+    
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
 
-        {% csrf_token %}
-        {{form.as_p}}
-
-        <button type="submit" class="save btn btn-default" >Save</button>
-    </form>
-
-    <script>
-        var editor = new MediumEditor('.editable');
-    </script>
+<script>
+    var editor = new MediumEditor('.editable', {
+        toolbar: {
+            buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'quote', 'orderedlist', 'unorderedlist']
+        },
+        placeholder: {
+            text: 'Write your post content here...'
+        }
+    });
+</script>
 {% endblock %}

@@ -3,19 +3,35 @@
 {% block content %}
 
 <div class="centerstage">
-
-    {% for post in post_list %}
-
-        <div class="post">
-            <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a></h1>
-            <div class="date">
-                <p>Published on: {{post.published_date|date:"D, d M Y"}}</p>
-            </div>
-            <a href="{% url 'post_detail' pk=post.pk %}">Comments: {{ post.approve_comments.count }}</a>
-        
-        </div>
-    {% endfor%}
+    <h2 class="mb-4">Recent Posts</h2>
     
+    {% if post_list %}
+        {% for post in post_list %}
+            <div class="post">
+                <h3 class="posttitle">
+                    <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+                </h3>
+                <div class="postdate">
+                    <i class="far fa-calendar-alt"></i> Published on: {{post.published_date|date:"D, d M Y"}}
+                </div>
+                <div class="post-preview">
+                    <p>{{ post.text|truncatechars:200 }}</p>
+                </div>
+                <div class="post-meta mt-3">
+                    <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-primary btn-sm">
+                        <i class="far fa-eye"></i> Read More
+                    </a>
+                    <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-outline-secondary btn-sm ms-2">
+                        <i class="far fa-comment"></i> Comments: {{ post.approve_comments.count }}
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info">
+            <p>No posts available yet. Check back soon!</p>
+        </div>
+    {% endif %}
 </div>
 
-{% endblock%}
+{% endblock %}

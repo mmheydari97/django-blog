@@ -1,10 +1,48 @@
 {% extends "blog/base.html" %}
 
 {% block content %}
+<div class="about-section">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h1 class="card-title mb-4">About This Blog</h1>
+            
+            <div class="card-text">
+                <p class="lead">Thanks for checking out my blog!</p>
+                
+                <div class="mt-4">
+                    <h3><i class="fas fa-code"></i> Development</h3>
+                    <p>This blog was built with Django 5, featuring a modern responsive design and a clean user interface.</p>
+                    <p>If you wish to develop your own blog, <a href="https://www.udemy.com/python-and-django-full-stack-web-developer-bootcamp" target="_blank" class="text-decoration-none">this tutorial</a> will help you get started.</p>
+                </div>
+                
+                <div class="mt-4">
+                    <h3><i class="fab fa-github"></i> Source Code</h3>
+                    <p>You can find the <a href="https://github.com/mmheydari97/django-blog" target="_blank" class="text-decoration-none">source code</a> for this project on GitHub.</p>
+                </div>
+                
+                <div class="mt-4">
+                    <h3><i class="fas fa-user-circle"></i> About Me</h3>
+                    <p>I'm a developer passionate about web technologies and creating user-friendly applications.</p>
+                    <p>You can find my CV <a href="https://mmheydari97.github.io/cv" target="_blank" class="text-decoration-none">here</a>.</p>
+                </div>
+                
+                <div class="mt-5 text-center">
+                    <p class="text-muted">Built with <i class="fas fa-heart text-danger"></i> using Django 5 and Bootstrap 5</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<h1>About</h1>
-<p>Thanks for checking it out!</p>
-<p>If you wish to develop your own blog, <a href="https://www.udemy.com/python-and-django-full-stack-web-developer-bootcamp">this</a> tutorial will help you out.</p>
-<p>You can also find the <a href="https://github.com/mmheydari97/django-blog">source code</a> simply.</p>
-<p>Finally, you can find my cv <a href="https://mmheydari97.github.io/cv">here</a>.</p>
+<style>
+    .about-section a {
+        color: var(--primary-color);
+        font-weight: 500;
+        transition: var(--transition);
+    }
+    
+    .about-section a:hover {
+        color: var(--accent-color);
+    }
+</style>
 {% endblock %}

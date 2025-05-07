@@ -1,82 +1,102 @@
 <!DOCTYPE html>
 {% load static %}
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Blog</title>
 
-    <!-- Bootstrap -->
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Medium Style Editor -->
     <script src="//cdn.jsdelivr.net/npm/medium-editor@latest/dist/js/medium-editor.min.js"></script>
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/medium-editor@latest/dist/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/blog.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/blog.css' %}">
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat|Russo+One" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700|Russo+One&display=swap" rel="stylesheet">
 </head>
 <body class="loader">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-default techfont custom-navbar">
+    <nav class="navbar navbar-expand-lg navbar-light techfont">
         <div class="container">
-            <ul class="nav navbar-nav">
-                <li><a class="navbar-brand bigbrand" href="{% url 'post_list' %}">My blog</a></li>
-                <li><a href="{% url 'about'%}">About</a></li>
-                <li><a href="https://www.github.com/mmheydari97">Github</a></li>
-                <li><a href="https://www.linkedin.com/in/mohammad-mahdi-heydari-b61278171/">LinkedIn</a></li>
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-                {% if user.is_authenticated %}
-                    <li>
-                        <a href="{% url 'post_new' %}">New Post</a>
+            <a class="navbar-brand bigbrand" href="{% url 'post_list' %}">My Blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">About</a>
                     </li>
-
-                    <li>
-                        <a href="{% url 'post_draft_list' %}">Drafts</a>
-                    </li>
-
-                    <li>
-                        <a href="{% url 'logout' %}">Log Out</a>
-                    </li>
-
-                    <li>
-                        <a href="">
-                            Welcome: {{ user.username }}
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.github.com/mmheydari97" target="_blank">
+                            <i class="fab fa-github"></i> Github
                         </a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.linkedin.com/in/mmheydari97/" target="_blank">
+                            <i class="fab fa-linkedin"></i> LinkedIn
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'post_new' %}">
+                                <i class="fas fa-plus"></i> New Post
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'post_draft_list' %}">
+                                <i class="fas fa-edit"></i> Drafts
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link">Welcome: {{ user.username }}</span>
+                        </li>
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'logout' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn nav-link border-0 bg-transparent">
+                                    <i class="fas fa-sign-out-alt"></i> Log Out
+                                </button>
+                            </form>
+                        </li>
                     {% else %}
-                    <li>
-                        <a class="nav navbar-right" href="{% url 'login' %}">
-                            <span class="glyphicon glyphicon-user"></span>
-                        </a>
-                    </li>
-
-                {% endif %}
-            </ul>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">
+                                <i class="fas fa-user"></i> Login
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
     </nav>
 
     <!-- CONTENT BLOCK -->
     <div class="content container">
-        <div class="row">
-            <div class="col-md-8">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
                 <div class="blog_posts">
                     {% block content %}
-
                     {% endblock %}
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
