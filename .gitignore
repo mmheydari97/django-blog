@@ -1,3 +1,4 @@
 *.pyc
 /mysite/blog/migrations
 mysite/db.sqlite3
+mysite/mysite/settings_local.py
