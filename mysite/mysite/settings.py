@@ -24,12 +24,12 @@ TEMPLATE_DIR = BASE_DIR / 'blog/templates/blog'
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '2h$)f89vni@#gs0@)4!tt)@e%%pnyku9w6c#t6o@czyntcw^3a'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["mmheydari97.pythonanywhere.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["mmheydari97.pythonanywhere.com",]
 
 
 # Application definition
