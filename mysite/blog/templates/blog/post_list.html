@@ -3,34 +3,39 @@
 {% block content %}
 
 <div class="centerstage">
-    <h2 class="mb-4">Recent Posts</h2>
-    
+    <header class="page-header">
+        <h1>Recent Posts</h1>
+    </header>
+
     {% if post_list %}
+        <div class="post-list">
         {% for post in post_list %}
-            <div class="post">
-                <h3 class="posttitle">
-                    <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
-                </h3>
-                <div class="postdate">
-                    <i class="far fa-calendar-alt"></i> Published on: {{post.published_date|date:"D, d M Y"}}
+            <article class="card post-card">
+                <div class="card-body">
+                    <h2 class="posttitle">
+                        <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+                    </h2>
+                    <div class="postdate">
+                        <time datetime="{{ post.published_date|date:'c' }}">{{ post.published_date|date:"M j, Y" }}</time>
+                    </div>
+                    <div class="post-excerpt">
+                        {{ post.text|safe|truncatewords_html:45 }}
+                    </div>
+                    <div class="post-meta">
+                        <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-primary btn-sm">
+                            Read more <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </a>
+                        <a href="{% url 'post_detail' pk=post.pk %}#comments" class="btn btn-outline-secondary btn-sm">
+                            <i class="far fa-comment" aria-hidden="true"></i> {{ post.approve_comments.count }}
+                            <span class="visually-hidden">comments</span>
+                        </a>
+                    </div>
                 </div>
-                <div class="post-preview">
-                    <p>{{ post.text|truncatechars:200 }}</p>
-                </div>
-                <div class="post-meta mt-3">
-                    <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-primary btn-sm">
-                        <i class="far fa-eye"></i> Read More
-                    </a>
-                    <a href="{% url 'post_detail' pk=post.pk %}" class="btn btn-outline-secondary btn-sm ms-2">
-                        <i class="far fa-comment"></i> Comments: {{ post.approve_comments.count }}
-                    </a>
-                </div>
-            </div>
+            </article>
         {% endfor %}
-    {% else %}
-        <div class="alert alert-info">
-            <p>No posts available yet. Check back soon!</p>
         </div>
+    {% else %}
+        <p class="empty-state">No posts available yet. Check back soon!</p>
     {% endif %}
 </div>
 
