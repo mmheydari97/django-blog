@@ -40,7 +40,21 @@
 <script>
     var editor = new MediumEditor('.editable', {
         toolbar: {
-            buttons: ['bold', 'italic', 'underline', 'anchor', 'h2', 'h3', 'quote', 'orderedlist', 'unorderedlist']
+            buttons: [
+                { name: 'bold', contentDefault: '<i class="fa-solid fa-bold"></i>' },
+                { name: 'italic', contentDefault: '<i class="fa-solid fa-italic"></i>' },
+                { name: 'underline', contentDefault: '<i class="fa-solid fa-underline"></i>' },
+                { name: 'anchor', contentDefault: '<i class="fa-solid fa-link"></i>' },
+                { name: 'h2', contentDefault: 'H2' },
+                { name: 'h3', contentDefault: 'H3' },
+                { name: 'quote', contentDefault: '<i class="fa-solid fa-quote-right"></i>' },
+                { name: 'orderedlist', contentDefault: '<i class="fa-solid fa-list-ol"></i>' },
+                { name: 'unorderedlist', contentDefault: '<i class="fa-solid fa-list-ul"></i>' }
+            ]
+        },
+        anchor: {
+            placeholderText: 'Paste or type a link',
+            linkValidation: true
         },
         placeholder: {
             text: 'Write your post content here...'

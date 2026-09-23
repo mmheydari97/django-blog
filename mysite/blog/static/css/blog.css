@@ -423,6 +423,25 @@ a, .btn, .form-control, .nav-link, .card {
 .comment-form textarea,
 .comment-form .medium-editor-element { min-height: 150px; }
 
+/* MediumEditor swaps the <textarea> for a contenteditable <div> and hides the
+   original; keep it hidden despite the textarea rules above. */
+.post-form textarea.medium-editor-hidden,
+.comment-form textarea.medium-editor-hidden { display: none; }
+
+.medium-editor-element {
+  overflow-wrap: anywhere;
+  cursor: text;
+}
+.medium-editor-element h2,
+.medium-editor-element h3 { margin: 1rem 0 .5rem; }
+.medium-editor-element blockquote {
+  margin: 1rem 0;
+  padding: .25rem 0 .25rem 1rem;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+}
+.medium-editor-element > :last-child { margin-bottom: 0; }
+
 .form-actions {
   display: flex;
   flex-wrap: wrap;
@@ -431,12 +450,84 @@ a, .btn, .form-control, .nav-link, .card {
   margin-top: 1.5rem;
 }
 
-.medium-editor-placeholder:after { color: var(--muted); font-style: normal; }
-.medium-editor-toolbar {
-  background: var(--text) !important;
-  border-radius: 8px !important;
+/* ==========================================================================
+   MediumEditor pop-up toolbar (appears when text is selected)
+   ========================================================================== */
+.medium-editor-placeholder:after {
+  color: var(--muted);
+  font-style: normal;
+  padding: .6rem .8rem;
+  margin: 0 !important;
 }
-.medium-editor-toolbar li button { background: transparent !important; color: var(--bg) !important; }
+
+.medium-editor-toolbar,
+.medium-editor-toolbar-form,
+.medium-editor-anchor-preview {
+  background: #0f172a;
+  color: #e2e8f0;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.3);
+  font-family: var(--font);
+}
+[data-bs-theme="dark"] .medium-editor-toolbar,
+[data-bs-theme="dark"] .medium-editor-toolbar-form,
+[data-bs-theme="dark"] .medium-editor-anchor-preview {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+.medium-editor-toolbar-actions { padding: 4px; margin: 0; }
+.medium-editor-toolbar li button,
+.medium-editor-toolbar li .medium-editor-action {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 .55rem;
+  margin: 0 1px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #cbd5e1;
+  font-family: var(--font);
+  font-size: .95rem;
+  line-height: 36px;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease;
+}
+.medium-editor-toolbar li button:hover {
+  background: rgba(148, 163, 184, 0.18);
+  color: #fff;
+}
+.medium-editor-toolbar li .medium-editor-button-active {
+  background: #60a5fa;
+  color: #0f172a;
+}
+.medium-editor-toolbar li .medium-editor-button-first,
+.medium-editor-toolbar li .medium-editor-button-last { border-radius: 6px; }
+
+/* Little arrow under/over the toolbar */
+.medium-toolbar-arrow-under:after { border-color: #0f172a transparent transparent transparent; top: 100%; }
+.medium-toolbar-arrow-over:before { border-color: transparent transparent #0f172a transparent; }
+[data-bs-theme="dark"] .medium-toolbar-arrow-under:after { border-top-color: #1e293b; }
+[data-bs-theme="dark"] .medium-toolbar-arrow-over:before { border-bottom-color: #1e293b; }
+
+/* Link form (the "anchor" button) */
+.medium-editor-toolbar-form { padding: 4px 6px; }
+.medium-editor-toolbar-form .medium-editor-toolbar-input {
+  height: 36px;
+  padding: 0 .6rem;
+  background: transparent;
+  color: #fff;
+  border: 0;
+  font: inherit;
+  font-size: .95rem;
+}
+.medium-editor-toolbar-form .medium-editor-toolbar-input::placeholder { color: #94a3b8; }
+.medium-editor-toolbar-form a { color: #cbd5e1; padding: 0 .4rem; text-decoration: none; }
+.medium-editor-toolbar-form a:hover { color: #fff; }
+
+.medium-editor-anchor-preview { font-size: .85rem; }
+.medium-editor-anchor-preview a { color: #93c5fd; padding: .35rem .6rem; display: inline-block; }
 
 /* ==========================================================================
    Alerts
