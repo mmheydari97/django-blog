@@ -3,100 +3,156 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Mohammad Heydari's blog — notes on software, data and language models.">
+    <meta name="color-scheme" content="light dark">
+    <title>Blog · Mohammad Heydari</title>
+
+    <!-- Theme: set before first paint (saved choice, else OS setting) -->
+    <script>
+        (function () {
+            var t = null;
+            try { t = localStorage.getItem('theme'); } catch (e) {}
+            if (t !== 'light' && t !== 'dark') {
+                t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-bs-theme', t);
+        })();
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- Medium Style Editor -->
-    <script src="//cdn.jsdelivr.net/npm/medium-editor@latest/dist/js/medium-editor.min.js"></script>
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/medium-editor@latest/dist/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8">
+    <script src="https://cdn.jsdelivr.net/npm/medium-editor@5.23.3/dist/js/medium-editor.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/medium-editor@5.23.3/dist/css/medium-editor.min.css" type="text/css" media="screen">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/blog.css' %}">
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700|Russo+One&display=swap" rel="stylesheet">
 </head>
-<body class="loader">
+<body>
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-light techfont">
+    <nav class="navbar navbar-expand-lg site-nav">
         <div class="container">
-            <a class="navbar-brand bigbrand" href="{% url 'post_list' %}">My Blog</a>
+            <a class="navbar-brand" href="{% url 'post_list' %}">Mohammad Heydari<span class="brand-sub">Blog</span></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'about' %}">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://www.github.com/mmheydari97" target="_blank">
-                            <i class="fab fa-github"></i> Github
+                        <a class="nav-link" href="https://mmheydari97.github.io/">Résumé</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://www.github.com/mmheydari97" target="_blank" rel="noopener">
+                            <i class="fab fa-github" aria-hidden="true"></i> GitHub
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="https://www.linkedin.com/in/mmheydari97/" target="_blank">
-                            <i class="fab fa-linkedin"></i> LinkedIn
+                        <a class="nav-link" href="https://www.linkedin.com/in/mmheydari97/" target="_blank" rel="noopener">
+                            <i class="fab fa-linkedin" aria-hidden="true"></i> LinkedIn
                         </a>
                     </li>
                 </ul>
-                
-                <ul class="navbar-nav ms-auto">
+
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
                     {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'post_new' %}">
-                                <i class="fas fa-plus"></i> New Post
+                                <i class="fas fa-plus" aria-hidden="true"></i> New Post
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'post_draft_list' %}">
-                                <i class="fas fa-edit"></i> Drafts
+                                <i class="fas fa-pen" aria-hidden="true"></i> Drafts
                             </a>
                         </li>
                         <li class="nav-item">
-                            <span class="nav-link">Welcome: {{ user.username }}</span>
+                            <span class="nav-link nav-user">{{ user.username }}</span>
                         </li>
                         <li class="nav-item">
                             <form method="post" action="{% url 'logout' %}" class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="btn nav-link border-0 bg-transparent">
-                                    <i class="fas fa-sign-out-alt"></i> Log Out
+                                <button type="submit" class="nav-link border-0 bg-transparent">
+                                    <i class="fas fa-arrow-right-from-bracket" aria-hidden="true"></i> Log Out
                                 </button>
                             </form>
                         </li>
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'login' %}">
-                                <i class="fas fa-user"></i> Login
+                                <i class="fas fa-user" aria-hidden="true"></i> Login
                             </a>
                         </li>
                     {% endif %}
+                    <li class="nav-item ms-lg-2 py-2 py-lg-0">
+                        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+                            <i class="fas fa-moon" aria-hidden="true"></i>
+                            <i class="fas fa-sun" aria-hidden="true"></i>
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- CONTENT BLOCK -->
-    <div class="content container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
-                <div class="blog_posts">
-                    {% block content %}
-                    {% endblock %}
-                </div>
-            </div>
+    <main class="page">
+        <div class="reading">
+            {% block content %}
+            {% endblock %}
         </div>
-    </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="container">
+            <span>&copy; {% now "Y" %} Mohammad Heydari</span>
+            <nav aria-label="Footer">
+                <a href="https://github.com/mmheydari97" target="_blank" rel="noopener">GitHub</a>
+                <a href="https://www.linkedin.com/in/mmheydari97/" target="_blank" rel="noopener">LinkedIn</a>
+                <a href="https://mmheydari97.github.io/">Résumé</a>
+            </nav>
+        </div>
+    </footer>
 
     <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Theme toggle -->
+    <script>
+        (function () {
+            var root = document.documentElement;
+            var btn = document.getElementById('theme-toggle');
+            if (btn) {
+                btn.addEventListener('click', function () {
+                    var next = root.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+                    root.setAttribute('data-bs-theme', next);
+                    try { localStorage.setItem('theme', next); } catch (e) {}
+                });
+            }
+            // Follow OS changes until the visitor picks a theme explicitly.
+            if (window.matchMedia) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+                    var saved = null;
+                    try { saved = localStorage.getItem('theme'); } catch (err) {}
+                    if (!saved) root.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light');
+                });
+            }
+        })();
+    </script>
 </body>
 </html>
