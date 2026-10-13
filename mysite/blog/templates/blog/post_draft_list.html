@@ -27,9 +27,12 @@
                         <a href="{% url 'post_edit' pk=post.pk %}" class="btn btn-sm btn-outline-secondary">
                             <i class="fas fa-pen" aria-hidden="true"></i> Edit
                         </a>
-                        <a href="{% url 'post_publish' pk=post.pk %}" class="btn btn-sm btn-success">
-                            <i class="fas fa-check" aria-hidden="true"></i> Publish
-                        </a>
+                        <form method="POST" action="{% url 'post_publish' pk=post.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-success">
+                                <i class="fas fa-check" aria-hidden="true"></i> Publish
+                            </button>
+                        </form>
                     </div>
                 </div>
             </article>

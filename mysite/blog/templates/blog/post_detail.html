@@ -16,12 +16,15 @@
                 <div class="postdate">Draft · not published</div>
             {% endif %}
 
-            {% if user.is_authenticated %}
+            {% if can_manage %}
                 <div class="post-actions mb-3">
                     {% if not post.published_date %}
-                        <a class="btn btn-success btn-sm" href="{% url 'post_publish' pk=post.pk %}">
-                            <i class="fas fa-check" aria-hidden="true"></i> Publish
-                        </a>
+                        <form method="POST" action="{% url 'post_publish' pk=post.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="fas fa-check" aria-hidden="true"></i> Publish
+                            </button>
+                        </form>
                     {% endif %}
                     <a class="btn btn-outline-secondary btn-sm" href="{% url 'post_edit' pk=post.pk %}">
                         <i class="fas fa-pen" aria-hidden="true"></i> Edit
@@ -48,7 +51,7 @@
 
         <div class="comments-container">
             {% for comment in post.comments.all %}
-                {% if user.is_authenticated or comment.approved_comment %}
+                {% if can_manage or comment.approved_comment %}
                 <div class="comment{% if not comment.approved_comment %} is-pending{% endif %}">
                         <div class="comment-header">
                             <strong>{{ comment.author }}</strong>
@@ -59,14 +62,20 @@
                             {{ comment.text|striptags|linebreaksbr }}
                         </div>
 
-                        {% if user.is_authenticated and not comment.approved_comment %}
+                        {% if can_manage and not comment.approved_comment %}
                             <div class="comment-actions">
-                                <a class="btn btn-success btn-sm" href="{% url 'comment_approve' pk=comment.pk %}">
-                                    <i class="fas fa-check" aria-hidden="true"></i> Approve
-                                </a>
-                                <a class="btn btn-outline-danger btn-sm" href="{% url 'comment_remove' pk=comment.pk %}">
-                                    <i class="fas fa-xmark" aria-hidden="true"></i> Remove
-                                </a>
+                                <form method="POST" action="{% url 'comment_approve' pk=comment.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check" aria-hidden="true"></i> Approve
+                                    </button>
+                                </form>
+                                <form method="POST" action="{% url 'comment_remove' pk=comment.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <i class="fas fa-xmark" aria-hidden="true"></i> Remove
+                                    </button>
+                                </form>
                             </div>
                         {% endif %}
                 </div>
