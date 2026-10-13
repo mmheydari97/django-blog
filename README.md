@@ -119,9 +119,20 @@ A modern blog application built with Django 5 and Bootstrap 5.
 
 ## Deploying to PythonAnywhere
 
-The live site reads its secret key from the `DJANGO_SECRET_KEY` environment variable, set in the
-PythonAnywhere WSGI file. Never put the key in `settings.py`. `DEBUG` stays off unless
-`DJANGO_DEBUG=1` is set, so don't set that in production.
+On the server, the secret key lives in `mysite/mysite/settings_local.py`. That file is gitignored, so
+it never reaches GitHub and `git pull` never touches it. It imports the normal settings and adds the
+key on top:
+```python
+# mysite/mysite/settings_local.py (on the server only, never committed)
+from .settings import *  # noqa
+
+SECRET_KEY = '<your secret key>'
+```
+Don't set `DEBUG = True` in the server copy; `DEBUG` stays off unless you do. Leave `ALLOWED_HOSTS`
+alone too, because `settings.py` already allows `mmheydari97.pythonanywhere.com`.
+
+Django only reads this file when `DJANGO_SETTINGS_MODULE` is `mysite.settings_local`. Plain
+`mysite.settings` has no key, so every page fails with "The SECRET_KEY setting must not be empty".
 
 ### One-time setup (first deploy after the security fixes)
 
@@ -131,34 +142,39 @@ PythonAnywhere WSGI file. Never put the key in `settings.py`. `DEBUG` stays off 
    git checkout -- mysite/mysite/settings.py
    git pull
    ```
-2. **Install the new package (`django-axes`) and create its tables:**
+2. **Generate a new secret key.** Don't reuse the old one: the 2019 key is in public git history.
+   ```
+   python -c "from django.core.management.utils import get_random_secret_key as g; print(g())"
+   ```
+3. **Create `mysite/mysite/settings_local.py`** as shown above, with the key from step 2.
+4. **Point Django at it.**
+   - Web app: on the Web tab, open the WSGI configuration file and make sure the settings line reads:
+     ```python
+     os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings_local'
+     ```
+   - `manage.py` commands in the console: add this to the virtualenv's `postactivate` script (or
+     `~/.bashrc`) so they use the same settings:
+     ```
+     export DJANGO_SETTINGS_MODULE=mysite.settings_local
+     ```
+5. **Install the new package (`django-axes`) and create its tables:**
    ```
    workon <your-venv>   # or source .../bin/activate
    pip install -r requirements.txt
    cd mysite && python manage.py migrate
    ```
-3. **Generate a new secret key.** Don't reuse the old one: the 2019 key is in public git history.
-   ```
-   python -c "from django.core.management.utils import get_random_secret_key as g; print(g())"
-   ```
-4. **Put the key in the WSGI file.** On the Web tab, open the WSGI configuration file and add this
-   above the line that loads the Django app (`get_wsgi_application`):
-   ```python
-   os.environ['DJANGO_SECRET_KEY'] = '<the key from step 3>'
-   ```
-   Make sure `DJANGO_SETTINGS_MODULE` is `'mysite.settings'`, and don't set `DJANGO_DEBUG`.
-5. **Change the admin password.** Its hash is in the database file that was committed in "v 2025",
+6. **Change the admin password.** Its hash is in the database file that was committed in "v 2025",
    which is public:
    ```
    python manage.py changepassword admin
    ```
-6. **Check static files.** On the Web tab, "Static files" should map `/static/` to
+7. **Check static files.** On the Web tab, "Static files" should map `/static/` to
    `.../mysite/static`. Run `python manage.py collectstatic` if anything looks unstyled.
-7. **Click Reload**, then check:
+8. **Click Reload**, then check:
    - A made-up URL shows a plain "Not Found" page, not the yellow Django debug page.
    - `/post/22/` returns 404 when you're logged out.
    - CSS and the admin pages load normally.
-8. **Check the login lockout sees real IPs.** On the live site, log in once with a wrong password,
+9. **Check the login lockout sees real IPs.** On the live site, log in once with a wrong password,
    then run `python manage.py axes_list_attempts`. It should show your own public IP. If it shows
    an internal 10.x address, every visitor shares one lockout, and the way the IP is read in
    `blog/views.py` (`client_ip`) needs changing.
@@ -172,7 +188,7 @@ pip install -r requirements.txt
 cd mysite && python manage.py migrate
 python manage.py collectstatic   # only if CSS or JS changed
 ```
-Then click **Reload** on the Web tab.
+Then click **Reload** on the Web tab. `settings_local.py` stays as it is.
 
 ### Login lockouts
 
