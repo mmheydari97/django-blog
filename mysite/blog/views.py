@@ -111,6 +111,8 @@ class DraftListView(LoginRequiredMixin, ListView):
     login_url = '/accounts/login/'
     redirect_field_name = 'blog/post_list.html'
     model = Post
+    template_name = 'blog/post_draft_list.html'
+    context_object_name = 'posts'
 
     def get_queryset(self):
         return managed_posts(self.request.user).filter(published_date__isnull=True).order_by('create_date')

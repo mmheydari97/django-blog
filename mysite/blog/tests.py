@@ -161,3 +161,49 @@ class RateLimitTests(BlogTestCase):
         # Other IPs can still log in.
         response = self.client.post(url, {'username': 'admin', 'password': 'pw'}, HTTP_X_REAL_IP='203.0.113.9')
         self.assertEqual(response.status_code, 302)
+
+
+class TemplateRenderingTests(BlogTestCase):
+    """Every page renders with the template it's meant to use."""
+
+    def test_public_pages(self):
+        pages = {
+            reverse('post_list'): 'blog/post_list.html',
+            reverse('about'): 'about.html',
+            reverse('post_detail', kwargs={'pk': self.published.pk}): 'blog/post_detail.html',
+            reverse('add_comment_to_post', kwargs={'pk': self.published.pk}): 'blog/comment_form.html',
+            reverse('login'): 'registration/login.html',
+        }
+        for url, template in pages.items():
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertEqual(response.status_code, 200)
+                self.assertTemplateUsed(response, template)
+
+    def test_author_pages(self):
+        self.client.force_login(self.author)
+        pages = {
+            reverse('post_new'): 'blog/post_form.html',
+            reverse('post_edit', kwargs={'pk': self.draft.pk}): 'blog/post_form.html',
+            reverse('post_remove', kwargs={'pk': self.draft.pk}): 'blog/post_confirm_delete.html',
+            reverse('post_draft_list'): 'blog/post_draft_list.html',
+            reverse('post_detail', kwargs={'pk': self.draft.pk}): 'blog/post_detail.html',
+        }
+        for url, template in pages.items():
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertEqual(response.status_code, 200)
+                self.assertTemplateUsed(response, template)
+
+    def test_draft_list_shows_drafts_with_actions(self):
+        self.client.force_login(self.author)
+        response = self.client.get(reverse('post_draft_list'))
+        self.assertContains(response, '<h1>Drafts</h1>', html=True)
+        self.assertContains(response, 'Secret draft')
+        self.assertNotContains(response, 'Public post')
+        self.assertContains(response, reverse('post_edit', kwargs={'pk': self.draft.pk}))
+        self.assertContains(response, 'action="%s"' % reverse('post_publish', kwargs={'pk': self.draft.pk}))
+
+    def test_draft_list_empty_state(self):
+        self.client.force_login(self.other)
+        self.assertContains(self.client.get(reverse('post_draft_list')), "You don't have any draft posts.")
