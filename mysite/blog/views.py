@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
 from django.utils import timezone
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
@@ -10,6 +11,16 @@ from blog.models import Post, Comment
 from blog.forms import PostForm, CommentForm
 
 # Create your views here.
+
+def visible_posts(user):
+    """Published posts, plus drafts the user may see: their own, or all of them for admins."""
+    if user.is_superuser:
+        return Post.objects.all()
+    published = Q(published_date__lte=timezone.now())
+    if user.is_authenticated:
+        return Post.objects.filter(published | Q(author=user))
+    return Post.objects.filter(published)
+
 
 class AboutView(TemplateView):
     template_name = 'about.html'
@@ -24,6 +35,9 @@ class PostListView(ListView):
 
 class PostDetailView(DetailView):
     model = Post
+
+    def get_queryset(self):
+        return visible_posts(self.request.user)
 
 
 class CreatePostView(LoginRequiredMixin, CreateView):
@@ -72,7 +86,7 @@ def post_publish(request, pk):
 
 
 def add_comment_to_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = get_object_or_404(visible_posts(request.user), pk=pk)
 
     if request.method == 'POST':
         form = CommentForm(request.POST)
